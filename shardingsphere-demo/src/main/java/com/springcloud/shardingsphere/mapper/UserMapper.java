@@ -2,7 +2,9 @@ package com.springcloud.shardingsphere.mapper;
 
 import com.springcloud.shardingsphere.entity.User;
 import com.springcloud.shardingsphere.entity.UserExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {

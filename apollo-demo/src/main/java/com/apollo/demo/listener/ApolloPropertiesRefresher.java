@@ -13,13 +13,14 @@ import org.springframework.stereotype.Component;
 public class ApolloPropertiesRefresher implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
-    @ApolloConfigChangeListener(value= ConfigConsts.NAMESPACE_APPLICATION)
-    public void onChange(ConfigChangeEvent changeEvent){
+    @ApolloConfigChangeListener(value = ConfigConsts.NAMESPACE_APPLICATION)
+    public void onChange(ConfigChangeEvent changeEvent) {
         this.applicationContext.publishEvent(new EnvironmentChangeEvent(changeEvent.changedKeys()));
     }
 }
