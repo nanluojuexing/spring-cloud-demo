@@ -41,7 +41,7 @@ public class EchoClientHandler implements Runnable {
                 selector.select(1000);
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
                 Iterator<SelectionKey> it = selectionKeys.iterator();
-                SelectionKey key = null;
+                SelectionKey key;
                 while (it.hasNext()) {
                     key = it.next();
                     it.remove();
@@ -65,6 +65,9 @@ public class EchoClientHandler implements Runnable {
             SocketChannel sc = (SocketChannel) key.channel();
             if (key.isConnectable()) {
                 if (sc.finishConnect()) {
+                    sc.configureBlocking(false);
+                    sc.register(this.selector, SelectionKey.OP_READ);
+                    doWrite(sc,"客户端连接成功，向服务端发送连接完成");
                 } else {
                     System.exit(1);
                 }
@@ -91,6 +94,7 @@ public class EchoClientHandler implements Runnable {
     private void doConnect() throws IOException {
         if (socketChannel.connect(new InetSocketAddress(host, port))) {
             socketChannel.register(selector, SelectionKey.OP_READ);
+            doWrite(socketChannel,"客户端已连接");
         } else {
             socketChannel.register(selector, SelectionKey.OP_CONNECT);
         }
@@ -103,7 +107,7 @@ public class EchoClientHandler implements Runnable {
         writeBuff.flip();
         socketChannel.write(writeBuff);
         if (!writeBuff.hasRemaining()) {
-            System.out.println("客户端发送命令成功");
+            System.out.println("写入完成");
         }
     }
 
